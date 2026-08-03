@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Central IT · institucional</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Spline+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Paleta medida do prototipo do Figma por amostragem de pixel, nao estimada:
+   fundo #000214, roxo #4d1c75, teal #0ba1aa. */
+:root{
+  --fundo:#000214; --fundo-2:#050a24; --roxo:#4d1c75; --roxo-luz:#8b46c9;
+  --teal:#0ba1aa; --teal-luz:#3fd9e2;
+  --txt:#ffffff; --txt-mid:rgba(255,255,255,.76); --txt-dim:rgba(255,255,255,.52);
+  --linha:rgba(63,217,226,.16);
+  --d:'Sora',sans-serif; --b:'Spline Sans',sans-serif;
+  --e:cubic-bezier(.22,1,.36,1);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#000;overflow:hidden;font-family:var(--b);color:var(--txt);
+  -webkit-user-select:none;user-select:none;overscroll-behavior:none;touch-action:none}
+#viewport{position:fixed;inset:0;display:grid;place-items:center}
+#palco{width:1280px;height:900px;position:relative;overflow:hidden;transform-origin:center;background:var(--fundo)}
+
+.s{position:absolute;inset:0;opacity:0;visibility:hidden;pointer-events:none}
+.s.on{opacity:1;visibility:visible;pointer-events:auto}
+
+/* ── fundo de imagem, sempre por baixo e rebaixado ── */
+.bg{position:absolute;inset:0;background-size:cover;background-position:center}
+.veu{position:absolute;inset:0}
+
+/* ── trilho ── */
+.rail{position:absolute;left:0;top:0;bottom:0;width:96px;z-index:6;
+  border-right:1px solid var(--linha);display:flex;flex-direction:column;align-items:center;padding:34px 0}
+.rail .m{font-family:var(--d);font-weight:700;font-size:14px;letter-spacing:-.02em}
+.rail .m i{color:var(--teal-luz);font-style:normal}
+.rail .p{margin-top:auto;display:flex;flex-direction:column;gap:10px}
+.rail .p i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);transition:all .5s var(--e)}
+.rail .p i.on{background:var(--teal-luz);height:20px;border-radius:3px;box-shadow:0 0 14px rgba(63,217,226,.7)}
+.corpo{position:absolute;left:96px;right:0;top:0;bottom:0;z-index:4}
+
+/* ── tipografia ── */
+.eyebrow{font-family:var(--d);font-weight:700;font-size:11.5px;letter-spacing:.24em;text-transform:uppercase;color:var(--teal-luz)}
+h1{font-family:var(--d);font-weight:800;letter-spacing:-.035em;line-height:1.02}
+h2{font-family:var(--d);font-weight:700;letter-spacing:-.03em;line-height:1.05}
+.lead{font-size:20px;line-height:1.6;color:var(--txt-mid)}
+
+/* ── cascata na troca de slide ── */
+.up{opacity:0}
+
+.s.on .up:nth-of-type(1){animation-delay:.05s} .s.on .up:nth-of-type(2){animation-delay:.13s}
+.s.on .up:nth-of-type(3){animation-delay:.21s} .s.on .up:nth-of-type(4){animation-delay:.29s}
+@keyframes sobe{to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.up,.s.on .up{animation:none;opacity:1;transform:none}}
+
+/* 1 capa */
+#s1 .corpo{display:flex;flex-direction:column;justify-content:center;padding-left:86px;max-width:760px}
+#s1 h1{font-size:78px}
+#s1 .risco{width:64px;height:5px;background:var(--teal-luz);border-radius:99px;margin-bottom:36px;
+  box-shadow:0 0 20px rgba(63,217,226,.6)}
+#s1 .lead{margin-top:26px;font-size:21px;max-width:31ch}
+#s1 .rod{position:absolute;left:182px;bottom:56px;z-index:5;font-family:var(--d);font-size:12px;
+  letter-spacing:.2em;text-transform:uppercase;color:var(--txt-dim)}
+
+/* 2 portfolio */
+#s2 .corpo{display:grid;grid-template-columns:1fr 1fr;align-items:center;padding:0 0 0 86px;gap:0}
+#s2 h2{font-size:52px;max-width:13ch}
+#s2 .lead{margin-top:24px;max-width:30ch}
+#s2 .arte{position:absolute;right:0;top:0;bottom:0;width:52%;background-size:cover;background-position:center left}
+#s2 .arte:after{content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,var(--fundo) 0%,rgba(0,2,20,.55) 34%,transparent 78%)}
+
+/* 3 frentes: um dominante grande e cinco em lista. Seis retangulos iguais
+   e o que faz a peca parecer template, entao a hierarquia e explicita. */
+#s3 .corpo{display:flex;flex-direction:column;padding:60px 64px 56px 86px}
+#s3 h2{font-size:46px} #s3 .sub{color:var(--txt-dim);font-size:16px;margin-top:8px}
+#s3 .fr{flex:1;display:grid;grid-template-columns:1.06fr .94fr;gap:52px;margin-top:32px}
+#s3 .dom{position:relative;overflow:hidden;border-radius:14px;display:flex;align-items:flex-end;padding:30px}
+#s3 .dom .im{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.68}
+#s3 .dom:after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,2,20,.1) 34%,rgba(0,2,20,.96) 100%)}
+#s3 .dom .tx{position:relative;z-index:2}
+#s3 .dom .n{font-family:var(--d);font-weight:700;font-size:12px;letter-spacing:.2em;color:var(--roxo-luz)}
+#s3 .dom .t{font-family:var(--d);font-weight:700;font-size:30px;line-height:1.1;margin-top:10px;letter-spacing:-.02em;max-width:15ch}
+#s3 .dom .d{font-size:15.5px;line-height:1.5;color:var(--txt-mid);margin-top:12px;max-width:32ch}
+#s3 .lista{display:flex;flex-direction:column;justify-content:center}
+#s3 .it{display:flex;align-items:baseline;gap:20px;padding:21px 0;border-top:1px solid var(--linha)}
+#s3 .it:last-child{border-bottom:1px solid var(--linha)}
+#s3 .it .n{font-family:var(--d);font-weight:700;font-size:12px;letter-spacing:.2em;color:var(--teal-luz);min-width:26px}
+#s3 .it .t{font-family:var(--d);font-weight:600;font-size:19px;letter-spacing:-.015em;line-height:1.25}
+
+/* 4 plataforma */
+#s4 .corpo{display:grid;grid-template-columns:1.02fr .98fr;align-items:center;padding:0 64px 0 86px;gap:48px}
+#s4 h2{font-size:50px;max-width:12ch}
+#s4 .lead{margin-top:22px;max-width:32ch;font-size:18px}
+#s4 .lin{margin-top:30px;display:flex;flex-direction:column}
+#s4 .lin div{padding:15px 0;border-top:1px solid var(--linha);font-size:15.5px;color:var(--txt-mid)}
+#s4 .lin div:last-child{border-bottom:1px solid var(--linha)}
+#s4 .lin b{font-family:var(--d);color:var(--teal-luz);font-weight:600}
+#s4 .chip{height:520px;border-radius:16px;background-size:cover;background-position:center;
+  border:1px solid rgba(63,217,226,.18)}
+
+/* 5 telas reais */
+#s5 .corpo{display:flex;flex-direction:column;padding:58px 64px 54px 86px}
+#s5 h2{font-size:44px} #s5 .sub{color:var(--txt-dim);font-size:16px;margin-top:8px;max-width:52ch}
+#s5 .telas{flex:1;display:grid;grid-template-columns:1.35fr 1fr;gap:26px;margin-top:30px}
+#s5 .tela{position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(63,217,226,.16);
+  background-size:cover;background-position:top center}
+#s5 .rot{position:absolute;left:0;right:0;bottom:0;padding:14px 18px;z-index:2;
+  background:linear-gradient(180deg,transparent,rgba(0,2,20,.92));
+  font-family:var(--d);font-weight:600;font-size:15px}
+
+/* 6 fecho */
+#s6 .corpo{display:flex;flex-direction:column;justify-content:center;padding-left:86px}
+#s6 h2{font-size:60px;max-width:15ch}
+#s6 .lead{margin-top:26px;max-width:34ch}
+#s6 .site{margin-top:40px;font-family:var(--d);font-weight:600;font-size:19px;color:var(--teal-luz)}
+
+.tap{position:absolute;top:0;bottom:0;width:24%;z-index:30}
+.tap.a{left:0}.tap.b{right:0}
+</style>
+</head>
+<body>
+<div id="viewport"><div id="palco">
+
+  <!-- 1 -->
+  <section class="s on" id="s1">
+    <div class="bg" style="background-image:url('../gerado-capa-01.png')"></div>
+    <div class="veu" style="background:linear-gradient(90deg,var(--fundo) 22%,rgba(0,2,20,.72) 48%,transparent 88%)"></div>
+    <div class="rail"><div class="m">Central<i>IT</i></div><div class="p"><i class="on"></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    <div class="corpo">
+      <div class="up"><div class="risco"></div></div>
+      <h1 class="up">Inteligência em gestão, tecnologia e negócios</h1>
+      <p class="lead up">Elevamos a performance da sua organização conectando pessoas, processos e tecnologia às estratégias do seu negócio.</p>
+    </div>
+    <div class="rod">Apresentação institucional</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="s" id="s2">
+    <div class="arte" style="background-image:url('../assets-figma/ae766927.png')"></div>
+    <div class="rail"><div class="m">Central<i>IT</i></div><div class="p"><i></i><i class="on"></i><i></i><i></i><i></i><i></i></div></div>
+    <div class="corpo">
+      <div class="up">
+        <p class="eyebrow">Quem somos</p>
+        <h2 style="margin-top:16px">Vinte e dois anos ligando estratégia a operação</h2>
+        <p class="lead">Multinacional brasileira, com plataforma própria e times que operam dentro do cliente, no setor público e no privado.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="s" id="s3">
+    <div class="rail"><div class="m">Central<i>IT</i></div><div class="p"><i></i><i></i><i class="on"></i><i></i><i></i><i></i></div></div>
+    <div class="corpo">
+      <div class="cab"><h2>Frentes de atuação</h2><p class="sub">Seis frentes, a plataforma CITSmart por baixo de todas.</p></div>
+      <div class="fr">
+        <!-- dominante: ocupa a altura inteira e carrega a imagem -->
+        <article class="dom">
+          <div class="im" style="background-image:url('../assets-figma/78c114da.png')"></div>
+          <div class="tx">
+            <div class="n">01</div>
+            <div class="t">Transformação digital impulsionada por IA</div>
+            <div class="d">Ampliamos eficiência e criamos diferenciais de valor em ciclos de 30 dias.</div>
+          </div>
+        </article>
+        <!-- as outras cinco viram lista, nao cards -->
+        <div class="lista">
+          <article class="it"><span class="n">02</span><span class="t">Estratégia e transformação de negócios</span></article>
+          <article class="it"><span class="n">03</span><span class="t">Eficientização de operações</span></article>
+          <article class="it"><span class="n">04</span><span class="t">Operações inteligentes de TI</span></article>
+          <article class="it"><span class="n">05</span><span class="t">Comunicação omnichannel inteligente</span></article>
+          <article class="it"><span class="n">06</span><span class="t">Soluções inovadoras</span></article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="s" id="s4">
+    <div class="rail"><div class="m">Central<i>IT</i></div><div class="p"><i></i><i></i><i></i><i class="on"></i><i></i><i></i></div></div>
+    <div class="corpo">
+      <div class="up">
+        <p class="eyebrow">A plataforma</p>
+        <h2 style="margin-top:16px">CITSmart X², o motor por baixo de tudo</h2>
+        <p class="lead">Governança, automação e cibersegurança num só lugar, orquestrando agentes, dados e identidade.</p>
+        <div class="lin">
+          <div><b>Hyper Agents</b>, agentes autônomos operando 24 por 7</div>
+          <div><b>Autonomous AI</b>, decisão e ação na própria operação</div>
+          <div><b>Mais de 20 produtos</b>, do ITSM ao ERP público</div>
+        </div>
+      </div>
+      <div class="chip up" style="background-image:url('../assets-figma/21dd98cf.png')"></div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="s" id="s5">
+    <div class="rail"><div class="m">Central<i>IT</i></div><div class="p"><i></i><i></i><i></i><i></i><i class="on"></i><i></i></div></div>
+    <div class="corpo">
+      <div class="up"><h2>Em operação, hoje</h2><p class="sub">Não é conceito. É o sistema rodando em cliente, com gente usando todo dia.</p></div>
+      <div class="telas up">
+        <div class="tela" style="background-image:url('../assets-figma/2be2a480.png')"><div class="rot">CITSmart People, gestão de equipe e desenvolvimento</div></div>
+        <div class="tela" style="background-image:url('../assets-figma/34fa633d.png')"><div class="rot">Gestão de tarefas por sprint</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="s" id="s6">
+    <div class="bg" style="background-image:url('../assets-gerados/inovacao.png');opacity:.85"></div>
+    <div class="veu" style="background:linear-gradient(90deg,var(--fundo) 26%,rgba(0,2,20,.7) 56%,transparent 92%)"></div>
+    <div class="rail"><div class="m">Central<i>IT</i></div><div class="p"><i></i><i></i><i></i><i></i><i></i><i class="on"></i></div></div>
+    <div class="corpo">
+      <div class="up"><h2>Vamos conversar sobre a sua operação</h2>
+        <p class="lead">Traga o problema que mais custa hoje. Saímos daqui com um caminho, não com uma proposta genérica.</p>
+        <p class="site">centralit.com.br</p></div>
+    </div>
+  </section>
+
+  <div class="tap a" onclick="ir(-1)"></div>
+  <div class="tap b" onclick="ir(1)"></div>
+</div></div>
+
+<script type="module">
+import { animate, stagger } from "./vendor/motion.js";
+
+const palco = document.getElementById('palco');
+const encaixa = () => palco.style.transform = 'scale(' + Math.min(innerWidth/1280, innerHeight/900) + ')';
+addEventListener('resize', encaixa); encaixa();
+
+const ss = [...document.querySelectorAll('.s')];
+const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+let i = 0, andando = false;
+
+/* O que entra em cascata em cada slide. Um seletor por tipo de elemento,
+   para a ordem seguir a leitura e nao a ordem do DOM. */
+const PECAS = '.up, .cab, .dom, .it, .tela, .chip, h1, .lead, .risco, .lin > div';
+
+function revela(slide, dir) {
+  const pecas = slide.querySelectorAll(PECAS);
+  if (reduz) { pecas.forEach(e => e.style.opacity = 1); return; }
+  animate(pecas,
+    { opacity: [0, 1], y: [22, 0], filter: ['blur(6px)', 'blur(0px)'] },
+    { duration: .62, delay: stagger(.055, { startDelay: .06 }), ease: [.22, 1, .36, 1] });
+}
+
+async function ir(d) {
+  const n = Math.min(Math.max(i + d, 0), ss.length - 1);
+  if (n === i || andando) return;
+  andando = true;
+  const sai = ss[i], entra = ss[n];
+  if (!reduz) {
+    /* A saida e curta e na direcao do gesto: quem apresenta nao espera. */
+    await animate(sai, { opacity: [1, 0], x: [0, d > 0 ? -34 : 34] },
+      { duration: .22, ease: 'easeIn' }).finished;
+  }
+  sai.classList.remove('on');
+  sai.style.opacity = ''; sai.style.transform = '';
+  i = n;
+  entra.classList.add('on');
+  if (!reduz) animate(entra, { opacity: [0, 1] }, { duration: .28 });
+  revela(entra, d);
+  /* O ponto ativo do trilho pulsa, para o apresentador saber onde esta. */
+  const ativo = entra.querySelector('.p i.on');
+  if (ativo && !reduz) animate(ativo, { scaleY: [.4, 1] }, { duration: .5, ease: [.22, 1, .36, 1] });
+  andando = false;
+}
+window.ir = ir;
+
+addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') ir(1);
+  if (e.key === 'ArrowLeft') ir(-1);
+});
+let x0 = null;
+addEventListener('touchstart', e => x0 = e.touches[0].clientX, { passive: true });
+addEventListener('touchend', e => {
+  if (x0 === null) return;
+  const dx = e.changedTouches[0].clientX - x0;
+  if (Math.abs(dx) > 60) ir(dx < 0 ? 1 : -1);
+  x0 = null;
+}, { passive: true });
+
+revela(ss[0], 1);
+</script>
+</body>
+</html>

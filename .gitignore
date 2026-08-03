@@ -1,0 +1,26 @@
+# Dependências e lixo do sistema
+node_modules/
+.DS_Store
+*.log
+
+# Saída do empacotador: é gerada por `python3 empacota.py`, não versionada
+output/
+
+# Local da Vercel
+.vercel
+
+# Matéria-prima pesada. As pastas ficam no Mac, e só sobe o que o deck carrega.
+# Ao referenciar uma imagem nova a partir do deck ou do conteúdo,
+# acrescente a exceção aqui, senão ela some no deploy.
+assets-figma/*
+!assets-figma/0fe10bfe.png
+!assets-figma/2be2a480.png
+!assets-figma/34fa633d.png
+
+assets-gerados/*
+!assets-gerados/inovacao.png
+
+# PNGs soltos da raiz: só a capa é usada
+folha-contato.png
+folha-fotos.png
+seis-frentes.png

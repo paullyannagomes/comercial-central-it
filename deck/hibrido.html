@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Central IT · híbrido</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Spline+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.className += ' js';</script>
+<style>
+:root{
+  --fundo:#000214; --roxo:#4d1c75; --roxo-luz:#8b46c9; --teal:#0ba1aa; --teal-luz:#3fd9e2;
+  --txt-mid:rgba(255,255,255,.76); --txt-dim:rgba(255,255,255,.5); --linha:rgba(63,217,226,.16);
+  --d:'Sora',sans-serif; --b:'Spline Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{background:var(--fundo);color:#fff;font-family:var(--b);
+  -webkit-user-select:none;user-select:none;overflow-x:hidden}
+
+/* ── trilho ───────────────────────────────────────────────────────── */
+.rail{position:fixed;left:0;top:0;bottom:0;width:clamp(60px,5.5vw,92px);z-index:40;pointer-events:none;
+  border-right:1px solid var(--linha);display:flex;flex-direction:column;align-items:center;padding:24px 0}
+.rail .m{font-family:var(--d);font-weight:700;font-size:13px}
+.rail .m i{color:var(--teal-luz);font-style:normal}
+.rail .p{margin-top:auto;display:flex;flex-direction:column;gap:9px;margin-bottom:8px}
+.rail .p i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.2);position:relative}
+/* O ponto ativo cresce com a rolagem interna: um indicador so, em vez de
+   dois disputando o mesmo canto. */
+.rail .p i{cursor:pointer}
+.rail .p i.on{background:rgba(63,217,226,.28);height:22px;border-radius:3px;position:relative;overflow:hidden}
+.rail .p i b{position:absolute;left:0;right:0;top:0;height:100%;display:block;border-radius:3px;
+  background:var(--teal-luz);box-shadow:0 0 12px rgba(63,217,226,.8)}
+.rail .p i:not(.on) b{display:none}
+/* barra fina de progresso interno, so nas secoes longas */
+.rail .rol{width:3px;height:22vh;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;
+  margin-bottom:22px;opacity:0}
+.rail .rol b{display:block;width:100%;height:0%;background:var(--teal-luz);border-radius:99px}
+
+/* ── secoes ───────────────────────────────────────────────────────── */
+/* Cada secao ocupa uma tela e a pagina rola por elas. E o modelo do
+   proprio Figma, que traz a seta "Continua" apontando para baixo. */
+.sec{position:relative;min-height:100vh;margin-left:clamp(60px,5.5vw,92px);overflow:hidden}
+.sec.longa{overflow:visible;min-height:0}
+
+.pad{padding:clamp(26px,4.4vh,58px) clamp(26px,4.4vw,72px)}
+h1{font-family:var(--d);font-weight:800;letter-spacing:-.035em;line-height:1.02;font-size:clamp(34px,6.4vw,76px)}
+h2{font-family:var(--d);font-weight:700;letter-spacing:-.03em;line-height:1.05;font-size:clamp(28px,4.2vw,48px)}
+.eyebrow{font-family:var(--d);font-weight:700;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--teal-luz)}
+.lead{font-size:clamp(14px,1.7vw,20px);line-height:1.6;color:var(--txt-mid)}
+/* Nada aqui esconde texto. Esconder por CSS e revelar por JS ja falhou duas
+   vezes: quando o script nao roda, o slide fica em branco no meio da
+   apresentacao. Agora quem esconde e o proprio JS, e so o que esta fora da
+   tela. O pior caso passa a ser "sem animacao", nunca "sem texto". */
+.bg{position:absolute;inset:0;background-size:cover;background-position:center}
+.veu{position:absolute;inset:0}
+
+/* 1 capa */
+#a1 .pad{height:100%;display:flex;flex-direction:column;justify-content:center;max-width:60%}
+#a1 .risco{width:62px;height:5px;background:var(--teal-luz);border-radius:99px;margin-bottom:32px;
+  box-shadow:0 0 18px rgba(63,217,226,.6)}
+#a1 .lead{margin-top:24px;max-width:30ch}
+
+/* 2 frentes, longa e comandada pela rolagem */
+#a2 .alto{height:460vh;position:relative}
+#a2 .preso{position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+#a2 .cab{padding:clamp(26px,4.4vh,52px) clamp(26px,4.4vw,72px) 0}
+#a2 .sub{color:var(--txt-dim);font-size:clamp(13px,1.5vw,17px);margin-top:8px}
+#a2 .grade{flex:1;display:grid;grid-template-columns:1.04fr .96fr;gap:clamp(24px,3.6vw,56px);
+  padding:clamp(18px,3vh,34px) clamp(26px,4.4vw,72px) clamp(26px,4.4vh,52px);align-items:center}
+#a2 .dom{position:relative;overflow:hidden;border-radius:14px;height:min(62vh,520px);
+  display:flex;align-items:flex-end;padding:clamp(16px,2.2vw,28px)}
+#a2 .dom .im{position:absolute;inset:-8%;background-size:cover;background-position:center;
+  opacity:0;transition:opacity .5s var(--e);will-change:transform,opacity}
+#a2 .dom .im.viva{opacity:.72}
+#a2 .it{cursor:pointer}
+#a2 .it.ativa .t{color:#fff}
+#a2 .it.ativa .n{color:var(--roxo-luz)}
+#a2 .dom:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,2,20,.05) 34%,rgba(0,2,20,.96) 100%)}
+#a2 .dom .tx{position:relative;z-index:2}
+#a2 .dom .n{font-family:var(--d);font-weight:700;font-size:11px;letter-spacing:.2em;color:var(--roxo-luz)}
+#a2 .dom .t{font-family:var(--d);font-weight:700;font-size:clamp(18px,2.4vw,28px);line-height:1.1;margin-top:8px;max-width:15ch;letter-spacing:-.02em}
+#a2 .lista{display:flex;flex-direction:column;justify-content:center}
+#a2 .it{display:flex;align-items:baseline;gap:clamp(12px,1.4vw,20px);padding:clamp(11px,1.9vh,20px) 0;
+  position:relative;opacity:.55;will-change:opacity,transform}
+#a2 .it .fio{position:absolute;left:0;top:0;height:1px;width:0;background:var(--teal-luz);opacity:.5}
+#a2 .it .n{font-family:var(--d);font-weight:700;font-size:11px;letter-spacing:.2em;color:var(--teal-luz);min-width:24px}
+#a2 .it .t{font-family:var(--d);font-weight:600;font-size:clamp(14px,1.65vw,19px);letter-spacing:-.015em;line-height:1.25}
+
+/* 3 numero que conta */
+#a3 .pad{height:100%;display:grid;grid-template-columns:1fr .9fr;align-items:center;gap:clamp(24px,4vw,60px)}
+#a3 .cifra{font-family:var(--d);font-weight:800;font-size:clamp(90px,15vw,190px);line-height:.84;letter-spacing:-.05em}
+#a3 .cifra span{color:var(--teal-luz)}
+#a3 .nota{font-size:clamp(14px,1.7vw,19px);line-height:1.6;color:var(--txt-mid);margin-top:20px;max-width:28ch}
+#a3 .li{display:flex;gap:18px;align-items:baseline;padding:clamp(12px,2vh,20px) 0;border-top:1px solid var(--linha)}
+#a3 .li:last-child{border-bottom:1px solid var(--linha)}
+#a3 .li b{font-family:var(--d);font-weight:700;font-size:clamp(18px,2.2vw,28px);color:var(--teal-luz);min-width:112px;letter-spacing:-.03em}
+#a3 .li p{font-size:clamp(12.5px,1.4vw,15.5px);line-height:1.45;color:var(--txt-mid)}
+
+/* 4 diagrama que se desenha */
+#a4 .pad{height:100%;display:flex;flex-direction:column;justify-content:center}
+#a4 svg{width:min(94%,980px);height:auto;margin-top:clamp(18px,4vh,42px)}
+#a4 .no{font-family:var(--d);font-weight:600;font-size:13px}
+
+/* 5 telas reais, construcao sob comando */
+#a5 .pad{height:100%;display:flex;flex-direction:column}
+#a5 .sub{color:var(--txt-dim);font-size:clamp(13px,1.5vw,17px);margin-top:8px}
+#a5 .telas{flex:1;display:grid;grid-template-columns:1.32fr 1fr;gap:clamp(16px,2vw,26px);margin-top:clamp(16px,3vh,30px)}
+#a5 .tela{position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(63,217,226,.16);
+  background-size:cover;background-position:top center;opacity:0}
+#a5 .rot{position:absolute;left:0;right:0;bottom:0;padding:13px 17px;z-index:2;
+  background:linear-gradient(180deg,transparent,rgba(0,2,20,.93));font-family:var(--d);font-weight:600;font-size:14px}
+
+/* ── Frente de atuacao: o segundo tema da peca. O Figma alterna escuro para
+   panorama e claro para aprofundamento, e o contraste tambem serve de
+   descanso visual numa apresentacao longa. ── */
+.sec.claro{background:#fff;color:#0d1d3d}
+.sec.claro .pad{height:100%;display:grid;grid-template-columns:1.02fr .98fr;
+  align-items:center;gap:clamp(20px,3vw,48px)}
+.sec.claro .arte{position:absolute;right:0;top:0;bottom:0;width:52%;
+  background-size:cover;background-position:center;opacity:.5}
+.sec.claro .arte:after{content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,#fff 4%,rgba(255,255,255,.72) 34%,rgba(255,255,255,.1) 100%)}
+.sec.claro .col{position:relative;z-index:2}
+.sec.claro .marca{position:absolute;right:clamp(24px,4vw,64px);top:clamp(26px,5vh,58px);z-index:3;
+  font-family:var(--d);font-size:clamp(11px,1.2vw,14px);color:#8a97ad}
+.sec.claro h2{color:#0d1d3d;font-size:clamp(24px,3.4vw,40px);letter-spacing:-.028em}
+.sec.claro .frase{font-size:clamp(15px,1.8vw,21px);line-height:1.45;color:#41506e;margin-top:clamp(12px,2vh,20px);max-width:26ch}
+.sec.claro .frase b{color:#0d1d3d;font-weight:700}
+.sec.claro .efeito{margin-top:clamp(14px,2.4vh,24px);padding:clamp(11px,1.6vh,16px) clamp(13px,1.6vw,20px);
+  border-radius:10px;background:var(--teal);color:#fff;font-size:clamp(12px,1.35vw,15px);
+  line-height:1.4;max-width:34ch;box-shadow:0 10px 26px -14px rgba(11,161,170,.7)}
+.sec.claro .pilar{padding:clamp(9px,1.5vh,14px) 0;border-bottom:1px solid #e6ecf6;max-width:40ch}
+.sec.claro .pilar b{display:block;font-family:var(--d);font-weight:700;
+  font-size:clamp(13px,1.45vw,16px);color:#0d1d3d;letter-spacing:-.01em}
+.sec.claro .pilar span{display:block;font-size:clamp(11.5px,1.3vw,14px);color:#5d6b87;margin-top:3px}
+/* a faixa teal que emoldura a tela no Figma */
+.sec.claro:before,.sec.claro:after{content:"";position:absolute;left:0;right:0;height:clamp(9px,1.4vh,14px);
+  background:var(--teal);z-index:4}
+.sec.claro:before{top:0}.sec.claro:after{bottom:0}
+
+/* ── Produto, tres telas executivas. Escuro com acento lima, tipografia
+   grande e uma ideia por tela: executivo nao le, ele escuta e olha. ── */
+.sec.prod{background:radial-gradient(120% 90% at 88% 8%,rgba(77,28,117,.34),transparent 62%),var(--fundo)}
+.sec.prod .pad{height:100%;display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(30px,6vh,68px) clamp(28px,5vw,76px)}
+.sec.prod .marca{font-family:var(--d);font-weight:700;font-size:clamp(11px,1.25vw,14px);
+  letter-spacing:.16em;text-transform:uppercase;color:var(--txt-dim)}
+.sec.prod .nome{font-family:var(--d);font-weight:800;font-size:clamp(30px,5.4vw,64px);
+  letter-spacing:-.035em;line-height:1;margin-top:8px}
+.sec.prod .nome i{font-style:normal;color:var(--teal-luz)}
+.sec.prod .tese{font-family:var(--d);font-weight:700;letter-spacing:-.03em;
+  font-size:clamp(21px,3.5vw,42px);line-height:1.12;margin-top:clamp(16px,3vh,30px);max-width:19ch}
+.sec.prod .tese em{font-style:normal;color:var(--teal-luz)}
+.sec.prod .corrido{margin-top:clamp(14px,2.4vh,22px);font-size:clamp(12.5px,1.45vw,16.5px);
+  line-height:1.6;color:var(--txt-mid);max-width:46ch}
+.sec.prod .provas{display:flex;gap:clamp(20px,4vw,64px);margin-top:clamp(20px,4vh,40px);
+  padding-top:clamp(16px,2.6vh,26px);border-top:1px solid var(--linha)}
+.sec.prod .provas b{display:block;font-family:var(--d);font-weight:800;letter-spacing:-.025em;
+  font-size:clamp(19px,2.9vw,34px);color:#c4f542}
+.sec.prod .provas span{display:block;font-size:clamp(10px,1.1vw,12.5px);color:var(--txt-dim);
+  margin-top:5px;max-width:16ch;line-height:1.35;text-transform:uppercase;letter-spacing:.06em}
+.sec.prod h2{font-family:var(--d);font-weight:700;letter-spacing:-.03em;
+  font-size:clamp(24px,3.8vw,44px);line-height:1.06}
+.sec.prod .sub{color:var(--txt-dim);font-size:clamp(12px,1.4vw,16px);margin-top:8px}
+/* fluxo de cinco passos */
+.sec.prod .fluxo{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(10px,1.6vw,22px);
+  margin-top:clamp(18px,3.4vh,34px)}
+.sec.prod .pss{position:relative;padding-top:clamp(13px,2.2vh,19px);border-top:2px solid rgba(63,217,226,.3)}
+.sec.prod .pss:first-child{border-color:var(--teal-luz)}
+.sec.prod .pss .n{font-family:var(--d);font-weight:800;font-size:clamp(15px,2vw,23px);
+  color:var(--teal-luz);letter-spacing:-.03em}
+.sec.prod .pss .t{font-family:var(--d);font-weight:600;font-size:clamp(11.5px,1.35vw,15px);
+  margin-top:6px;line-height:1.2}
+.sec.prod .pss .d{font-size:clamp(10px,1.15vw,12.5px);color:var(--txt-dim);margin-top:5px;line-height:1.45}
+/* areas */
+.sec.prod .rot{font-family:var(--d);font-weight:700;font-size:clamp(10.5px,1.2vw,13px);
+  letter-spacing:.18em;text-transform:uppercase;color:#c4f542;margin-top:clamp(22px,4vh,40px)}
+.sec.prod .areas{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(9px,1.3vw,17px);
+  margin-top:clamp(10px,1.8vh,16px)}
+.sec.prod .ar{padding:clamp(9px,1.5vh,14px) clamp(10px,1.2vw,15px);border-radius:9px;
+  background:rgba(255,255,255,.035);border:1px solid rgba(63,217,226,.14)}
+.sec.prod .ar b{display:block;font-family:var(--d);font-weight:700;font-size:clamp(11px,1.25vw,14px)}
+.sec.prod .ar span{display:block;font-size:clamp(9.5px,1.05vw,11.5px);color:var(--txt-dim);
+  margin-top:3px;line-height:1.35}
+/* o que muda */
+.sec.prod .muda{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(20px,3.4vw,52px);
+  margin-top:clamp(18px,3.4vh,32px);align-items:start}
+.sec.prod .rcard{padding:clamp(12px,1.9vh,18px) 0;border-bottom:1px solid var(--linha)}
+.sec.prod .rcard b{display:block;font-family:var(--d);font-weight:700;color:var(--teal-luz);
+  font-size:clamp(13px,1.6vw,18px);letter-spacing:-.015em}
+.sec.prod .rcard span{display:block;font-size:clamp(11px,1.25vw,14px);color:var(--txt-mid);
+  margin-top:4px;line-height:1.45}
+.sec.prod .serv{background:rgba(255,255,255,.04);border:1px solid rgba(196,245,66,.22);
+  border-radius:14px;padding:clamp(16px,2.4vw,26px)}
+.sec.prod .serv h3{font-family:var(--d);font-weight:700;color:#c4f542;
+  font-size:clamp(12.5px,1.45vw,16px);line-height:1.25}
+.sec.prod .serv div{display:flex;gap:10px;align-items:baseline;padding:clamp(6px,1vh,9px) 0;
+  font-size:clamp(10.5px,1.15vw,13px);color:var(--txt-mid);line-height:1.4}
+.sec.prod .serv i{width:5px;height:5px;border-radius:50%;background:#c4f542;flex:none;margin-top:6px}
+
+/* 6 fecho */
+#a6 .pad{height:100%;display:flex;flex-direction:column;justify-content:center}
+#a6 .site{margin-top:clamp(22px,4vh,40px);font-family:var(--d);font-weight:600;
+  font-size:clamp(15px,1.8vw,19px);color:var(--teal-luz)}
+
+/* cursor:pointer nao e enfeite: sem ele o Safari do iOS nao dispara click
+   em div. E o z acima do trilho, senao a metade esquerda fica bloqueada. */
+.tap{position:fixed;top:0;bottom:0;width:16%;z-index:45;cursor:pointer}
+.tap.a{left:0}.tap.b{right:0}
+.dica{position:fixed;right:16px;bottom:14px;z-index:36;font-size:11px;color:var(--txt-dim);
+  font-family:var(--d);letter-spacing:.1em;text-transform:uppercase;opacity:.6}
+</style>
+</head>
+<body>
+
+<div class="rail">
+  <div class="m">Central<i>IT</i></div>
+  
+  <div class="p" id="pontos"></div>
+</div>
+
+<!-- 1 ─ capa, fixa -->
+<section class="sec fixa on" id="a1">
+  <div class="bg" style="background-image:url('../gerado-capa-01.png')"></div>
+  <div class="veu" style="background:linear-gradient(90deg,var(--fundo) 20%,rgba(0,2,20,.7) 46%,transparent 86%)"></div>
+  <div class="pad">
+    <div class="risco r"></div>
+    <h1 class="r">Inteligência em gestão, tecnologia e negócios</h1>
+    <p class="lead r">Elevamos a performance da sua organização conectando pessoas, processos e tecnologia às estratégias do seu negócio.</p>
+  </div>
+</section>
+
+<!-- 2 ─ frentes, longa: a rolagem comanda -->
+<section class="sec longa" id="a2">
+  <div class="alto">
+    <div class="preso">
+      <div class="cab">
+        <h2 class="r">Frentes de atuação</h2>
+        <p class="sub r">Seis frentes, a plataforma CITSmart por baixo de todas.</p>
+      </div>
+      <div class="grade">
+        <article class="dom" id="dom2">
+          <div class="tx"><div class="n"></div><div class="t"></div></div>
+        </article>
+        <div class="lista" id="lista2">
+          <article class="it"><i class="fio"></i><span class="n">02</span><span class="t">Estratégia e transformação de negócios</span></article>
+          <article class="it"><i class="fio"></i><span class="n">03</span><span class="t">Eficientização de operações</span></article>
+          <article class="it"><i class="fio"></i><span class="n">04</span><span class="t">Operações inteligentes de TI</span></article>
+          <article class="it"><i class="fio"></i><span class="n">05</span><span class="t">Comunicação omnichannel inteligente</span></article>
+          <article class="it"><i class="fio"></i><span class="n">06</span><span class="t">Soluções inovadoras</span></article>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 ─ numero que conta, fixa -->
+<section class="sec fixa" id="a3">
+  <div class="pad">
+    <div>
+      <p class="eyebrow r">Governo do Distrito Federal</p>
+      <div class="cifra r" style="margin-top:14px"><span id="conta">0</span></div>
+      <p class="nota r">serviços de zeladoria abertos pelo cidadão a qualquer hora, no Portal Cidadão.</p>
+    </div>
+    <div>
+      <div class="li r"><b>33 RAs</b><p>administrações regionais no mesmo fluxo</p></div>
+      <div class="li r"><b>gov.br</b><p>identidade federal, sem cadastro novo</p></div>
+      <div class="li r"><b>No mapa</b><p>o cidadão marca o ponto e o endereço se preenche</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 ─ diagrama que se desenha, fixa -->
+<section class="sec fixa" id="a4">
+  <div class="pad">
+    <p class="eyebrow r">A plataforma</p>
+    <h2 class="r" style="margin-top:14px">Tudo roda sobre a CITSmart</h2>
+    <svg viewBox="0 0 900 260" fill="none">
+      <g id="tracos" stroke="var(--teal-luz)" stroke-width="1.6" opacity=".75">
+        <path d="M120 130 H360"/><path d="M540 130 H780"/>
+        <path d="M450 92 V40 H150 V112"/><path d="M450 92 V40 H750 V112"/>
+        <path d="M450 168 V220 H150 V148"/><path d="M450 168 V220 H750 V148"/>
+      </g>
+      <g id="nos">
+        <rect x="378" y="100" width="144" height="60" rx="12" fill="#0e1b3f" stroke="var(--roxo-luz)" stroke-width="1.4"/>
+        <text x="450" y="136" text-anchor="middle" fill="#fff" class="no">CITSmart X²</text>
+        <rect x="90" y="112" width="120" height="36" rx="9" fill="#07102b" stroke="var(--linha)"/>
+        <text x="150" y="135" text-anchor="middle" fill="var(--txt-mid)" class="no">Hyper Agents</text>
+        <rect x="690" y="112" width="120" height="36" rx="9" fill="#07102b" stroke="var(--linha)"/>
+        <text x="750" y="135" text-anchor="middle" fill="var(--txt-mid)" class="no">Autonomous AI</text>
+        <rect x="90" y="22" width="120" height="34" rx="9" fill="#07102b" stroke="var(--linha)"/>
+        <text x="150" y="44" text-anchor="middle" fill="var(--txt-mid)" class="no">ITSM</text>
+        <rect x="690" y="22" width="120" height="34" rx="9" fill="#07102b" stroke="var(--linha)"/>
+        <text x="750" y="44" text-anchor="middle" fill="var(--txt-mid)" class="no">ERP público</text>
+        <rect x="90" y="204" width="120" height="34" rx="9" fill="#07102b" stroke="var(--linha)"/>
+        <text x="150" y="226" text-anchor="middle" fill="var(--txt-mid)" class="no">Contratos</text>
+        <rect x="690" y="204" width="120" height="34" rx="9" fill="#07102b" stroke="var(--linha)"/>
+        <text x="750" y="226" text-anchor="middle" fill="var(--txt-mid)" class="no">Omnichannel</text>
+      </g>
+    </svg>
+  </div>
+</section>
+
+<!-- 5 ─ telas reais, construcao sob comando -->
+<section class="sec fixa" id="a5">
+  <div class="pad">
+    <h2 class="r">Em operação, hoje</h2>
+    <p class="sub r">Não é conceito. É o sistema rodando em cliente, com gente usando todo dia.</p>
+    <div class="telas">
+      <div class="tela passo" style="background-image:url('../assets-figma/2be2a480.png')"><div class="rot">CITSmart People</div></div>
+      <div class="tela passo" style="background-image:url('../assets-figma/34fa633d.png')"><div class="rot">Gestão de tarefas por sprint</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 ─ fecho -->
+<section class="sec fixa" id="a6">
+  <div class="bg" style="background-image:url('../assets-gerados/inovacao.png');opacity:.85"></div>
+  <div class="veu" style="background:linear-gradient(90deg,var(--fundo) 24%,rgba(0,2,20,.68) 54%,transparent 90%)"></div>
+  <div class="pad">
+    <h2 class="r" style="font-size:clamp(30px,5.2vw,58px);max-width:15ch">Vamos conversar sobre a sua operação</h2>
+    <p class="lead r" style="margin-top:22px;max-width:34ch">Traga o problema que mais custa hoje. Saímos daqui com um caminho, não com uma proposta genérica.</p>
+    <p class="site r">centralit.com.br</p>
+  </div>
+</section>
+
+<div class="dica" id="dica"></div>
+
+<script type="module">
+import { animate, inView, stagger } from "./vendor/motion.js";
+import { institucional as C } from "../conteudo/institucional.js";
+import { hyperAgents as H } from "../conteudo/hyper-agents.js";
+
+/* O HTML define a arte; o texto vem do arquivo de conteudo. Marcar com
+   data-c e o unico contrato entre os dois, entao o marketing edita o
+   conteudo sem nunca abrir este arquivo. */
+const põe = (sel, txt) => { const e = document.querySelector(sel); if (e && txt != null) e.textContent = txt; };
+põe('#a1 h1', C.capa.titulo);
+põe('#a1 .lead', C.capa.apoio);
+põe('#a2 h2', C.frentes.titulo);
+põe('#a2 .sub', C.frentes.apoio);
+/* O painel mostra a frente ativa: imagem, numero e nome trocam junto com o
+   item que a rolagem alcancou. Sao seis camadas empilhadas e uma acesa. */
+{
+  const dom = document.getElementById('dom2');
+  C.detalhes.forEach(d => dom.insertAdjacentHTML('afterbegin',
+    `<div class="im" style="background-image:url('${d.arte}')"></div>`));
+  const camadas = [...dom.querySelectorAll('.im')].reverse();
+  const lista = document.getElementById('lista2');
+  lista.innerHTML = C.detalhes.slice(1).map((d, k) =>
+    `<article class="it" data-k="${k + 1}"><i class="fio"></i><span class="n">0${k + 2}</span><span class="t">${d.nome}</span></article>`).join('');
+  const itens = [...lista.querySelectorAll('.it')];
+  let atual = -1;
+  window.mostraFrente = (k) => {
+    if (k === atual) return;
+    atual = k;
+    camadas.forEach((c, j) => c.classList.toggle('viva', j === k));
+    dom.querySelector('.n').textContent = '0' + (k + 1);
+    dom.querySelector('.t').textContent = C.detalhes[k].nome;
+    itens.forEach((it, j) => it.classList.toggle('ativa', j + 1 === k));
+  };
+  /* tocar no item tambem leva ate ele: no iPad o dedo vai direto no que interessa */
+  itens.forEach(it => it.addEventListener('pointerup', e => {
+    e.stopPropagation();
+    const sec = document.getElementById('a2'), alvo = sec.querySelector('.alto');
+    const k = +it.dataset.k;
+    sec.scrollTo({ top: (alvo.offsetHeight - sec.clientHeight) * ((k - .4) / C.detalhes.length), behavior: 'smooth' });
+  }));
+  mostraFrente(0);
+}
+/* As seis paginas de frente nascem do conteudo, nao do HTML: seis blocos
+   iguais escritos a mao seria justamente o que o projeto quer evitar. */
+{
+  const ARTES = ['0fe10bfe.png','0fe10bfe.png','0fe10bfe.png','0fe10bfe.png','0fe10bfe.png','0fe10bfe.png'];
+  const molde = (d, k) => `
+    <section class="sec fixa claro" id="f${k}">
+      <div class="arte" style="background-image:url('../assets-figma/${ARTES[k]}')"></div>
+      <div class="marca">Frente de Atuação</div>
+      <div class="pad">
+        <div class="col">
+          <h2 class="r">${d.nome}</h2>
+          <p class="frase r">${d.frase[0]} <b>${d.frase[1]}</b></p>
+          <div class="efeito r">${d.efeito}</div>
+        </div>
+        <div class="col">
+          ${d.pilares.map(p => `<div class="pilar r"><b>${p.t}</b><span>${p.d}</span></div>`).join('')}
+        </div>
+      </div>
+    </section>`;
+  document.getElementById('a2').insertAdjacentHTML('afterend',
+    C.detalhes.map(molde).join(''));
+}
+
+põe('#a3 .eyebrow', C.resultado.eyebrow);
+põe('#a3 .nota', C.resultado.nota);
+document.querySelectorAll('#a3 .li').forEach((li, k) => {
+  const a = C.resultado.apoios[k]; if (!a) return;
+  li.querySelector('b').textContent = a.chave; li.querySelector('p').textContent = a.texto;
+});
+põe('#a4 .eyebrow', C.plataforma.eyebrow);
+põe('#a4 h2', C.plataforma.titulo);
+põe('#a5 h2', C.operacao.titulo);
+põe('#a5 .sub', C.operacao.apoio);
+document.querySelectorAll('#a5 .tela').forEach((t, k) => {
+  const d = C.operacao.telas[k]; if (!d) return;
+  t.style.backgroundImage = `url('${d.arte}')`;
+  t.querySelector('.rot').textContent = d.rotulo;
+});
+/* ── Hyper Agents em tres telas: a tese, como funciona e onde, o que muda ── */
+{
+  const T = H.tese, K = H.como, M = H.muda;
+  const telas = [
+    `<section class="sec prod" id="p1">
+       <div class="pad">
+         <div class="marca r">${T.marca}</div>
+         <div class="nome r">Hyper <i>Agents</i></div>
+         <div class="tese r">${T.titulo[0]} <em>${T.titulo[1]}</em> ${T.titulo[2]}</div>
+         <p class="corrido r">${T.texto}</p>
+         <div class="provas r">${T.provas.map(p => `<div><b>${p.v}</b><span>${p.r}</span></div>`).join('')}</div>
+       </div>
+     </section>`,
+    `<section class="sec prod" id="p2">
+       <div class="pad">
+         <h2 class="r">${K.titulo}</h2>
+         <p class="sub r">${K.apoio}</p>
+         <div class="fluxo r">${K.passos.map(x =>
+           `<div class="pss"><div class="n">${x.n}</div><div class="t">${x.t}</div><div class="d">${x.d}</div></div>`).join('')}</div>
+         <div class="rot r">${K.areasTitulo}</div>
+         <div class="areas r">${K.areas.map(a => `<div class="ar"><b>${a.t}</b><span>${a.d}</span></div>`).join('')}</div>
+       </div>
+     </section>`,
+    `<section class="sec prod" id="p3">
+       <div class="pad">
+         <h2 class="r">${M.titulo}</h2>
+         <div class="muda r">
+           <div>${M.resultados.map(r => `<div class="rcard"><b>${r.t}</b><span>${r.d}</span></div>`).join('')}</div>
+           <div class="serv">
+             <h3>${M.servicoTitulo}</h3>
+             ${M.servicos.map(t => `<div><i></i>${t}</div>`).join('')}
+           </div>
+         </div>
+       </div>
+     </section>`,
+  ];
+  document.getElementById('a5').insertAdjacentHTML('afterend', telas.join(''));
+}
+
+põe('#a6 h2', C.fecho.titulo);
+põe('#a6 .lead', C.fecho.apoio);
+põe('#a6 .site', C.fecho.site);
+
+const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const EASE = [.22, 1, .36, 1];
+
+const secs = [...document.querySelectorAll('.sec')];
+const pontos = document.getElementById('pontos');
+secs.forEach((_, k) => pontos.insertAdjacentHTML('beforeend', `<i class="${k === 0 ? 'on' : ''}"><b></b></i>`));
+const bolas = [...pontos.children];
+const dica = document.getElementById('dica');
+
+/* Entrada quando a secao aparece, nao quando a pagina carrega: numa pagina
+   que rola, revelar tudo de uma vez desperdica o movimento. */
+/* SEM animacao de entrada no texto, de proposito.
+   Ela falhou tres vezes em maquina de cliente: esconder por CSS ou por JS e
+   depender de um gatilho para revelar significa que, quando o gatilho nao
+   dispara, o slide fica em branco no meio da apresentacao. Numa peca que roda
+   ao vivo, texto invisivel e falha grave; ausencia de animacao nao e.
+
+   O movimento que sobrou e o que nao pode esconder conteudo: a imagem que
+   troca com a rolagem, o contador e o diagrama que se desenha. */
+
+/* O ponto do trilho segue a secao visivel, e tocar nele leva ate la. */
+bolas.forEach((b, k) => b.addEventListener('pointerup', () =>
+  secs[k].scrollIntoView({ behavior: 'smooth', block: 'start' })));
+const marca = () => {
+  const meio = scrollY + innerHeight * .42;
+  let atual = 0;
+  secs.forEach((s, k) => { if (s.offsetTop <= meio) atual = k; });
+  bolas.forEach((b, k) => b.classList.toggle('on', k === atual));
+};
+addEventListener('scroll', marca, { passive: true });
+marca();
+
+/* A secao de frentes continua comandada pela rolagem, agora a da pagina. */
+{
+  const sec = document.getElementById('a2'), alto = sec.querySelector('.alto');
+  const dentro = () => {
+    const t = alto.getBoundingClientRect();
+    return Math.min(1, Math.max(0, -t.top / Math.max(1, alto.offsetHeight - innerHeight)));
+  };
+  const atualiza = () => {
+    const p = dentro();
+    window.mostraFrente(Math.min(C.detalhes.length - 1, Math.floor(p * C.detalhes.length + .35)));
+    const b = bolas[secs.indexOf(sec)]?.querySelector('b');
+    if (b) b.style.height = (p * 100).toFixed(1) + '%';
+    if (!reduz) sec.querySelectorAll('#dom2 .im').forEach(im => {
+      im.style.transform = `scale(${(1 + p * .12).toFixed(3)}) translateY(${(-2 + p * 4).toFixed(2)}%)`;
+    });
+    sec.querySelectorAll('.it').forEach((it, k) => {
+      const a = .06 + k * .16, b2 = a + .14;
+      const q = Math.min(1, Math.max(0, (p - a) / (b2 - a)));
+      it.style.opacity = (.55 + q * .45).toFixed(2);
+      it.style.transform = `translateX(${(22 * (1 - q)).toFixed(1)}px)`;
+      it.querySelector('.fio').style.width = (q * 100).toFixed(0) + '%';
+    });
+  };
+  addEventListener('scroll', atualiza, { passive: true });
+  atualiza();
+}
+
+/* Numero e diagrama disparam quando a secao entra em cena. */
+inView('#a3', () => {
+  const el = document.getElementById('conta');
+  if (reduz) { el.textContent = String(C.resultado.valor); return; }
+  animate(0, C.resultado.valor, { duration: 1.15, ease: [.16, 1, .3, 1],
+    onUpdate: v => el.textContent = Math.round(v) });
+}, { amount: .4 });
+
+inView('#a4', (sec) => {
+  if (reduz) return;
+  const paths = document.querySelectorAll('#tracos path');
+  paths.forEach(p => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
+  animate(paths, { strokeDashoffset: 0 }, { duration: .9, delay: stagger(.08), ease: 'easeInOut' });
+  animate(document.querySelectorAll('#nos rect, #nos text'),
+    { opacity: [0, 1], scale: [.9, 1] }, { duration: .45, delay: stagger(.05, { startDelay: .3 }), ease: EASE });
+}, { amount: .4 });
+
+/* As telas de produto entram uma a uma quando a secao aparece. */
+inView('#a5', () => {
+  const telas = document.querySelectorAll('#a5 .tela');
+  if (reduz) { telas.forEach(t => t.style.opacity = 1); return; }
+  animate(telas, { opacity: [0, 1], y: [30, 0], scale: [.97, 1] },
+    { duration: .55, delay: stagger(.18), ease: EASE });
+}, { amount: .35 });
+
+addEventListener('keydown', e => {
+  const i = secs.findIndex(s => s.offsetTop > scrollY + 8);
+  if (e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); secs[Math.max(0, i)]?.scrollIntoView({ behavior: 'smooth' }); }
+  if (e.key === 'ArrowUp') { e.preventDefault(); secs[Math.max(0, i - 2)]?.scrollIntoView({ behavior: 'smooth' }); }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Central IT · rolagem</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Spline+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Mesma paleta medida do prototipo. O que muda aqui nao e a arte, e o modelo:
+   a secao fica presa na tela e a rolagem comanda a transformacao. */
+:root{
+  --fundo:#000214; --roxo:#4d1c75; --roxo-luz:#8b46c9; --teal:#0ba1aa; --teal-luz:#3fd9e2;
+  --txt-mid:rgba(255,255,255,.76); --txt-dim:rgba(255,255,255,.5);
+  --linha:rgba(63,217,226,.16);
+  --d:'Sora',sans-serif; --b:'Spline Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:var(--fundo);color:#fff;font-family:var(--b);
+  -webkit-user-select:none;user-select:none;overflow-x:hidden}
+
+/* trilho lateral, o mesmo indice do Figma */
+.rail{position:fixed;left:0;top:0;bottom:0;width:clamp(64px,6vw,96px);z-index:20;
+  border-right:1px solid var(--linha);display:flex;flex-direction:column;align-items:center;
+  padding:26px 0;background:linear-gradient(90deg,var(--fundo),rgba(0,2,20,.6))}
+.rail .m{font-family:var(--d);font-weight:700;font-size:13px}
+.rail .m i{color:var(--teal-luz);font-style:normal}
+.rail .p{margin-top:auto;width:3px;height:34vh;background:rgba(255,255,255,.12);border-radius:99px;
+  position:relative;overflow:hidden;margin-bottom:26px}
+.rail .p b{position:absolute;left:0;right:0;top:0;height:0%;background:var(--teal-luz);border-radius:99px;
+  box-shadow:0 0 12px rgba(63,217,226,.8)}
+
+/* a secao mede 380vh e o palco fica preso enquanto ela passa */
+.secao{position:relative;height:380vh}
+.preso{position:sticky;top:0;height:100vh;overflow:hidden;
+  padding-left:clamp(64px,6vw,96px)}
+.dentro{height:100%;padding:clamp(28px,4vh,54px) clamp(24px,4vw,64px) clamp(28px,4vh,54px) clamp(24px,3vw,54px);
+  display:grid;grid-template-columns:1.02fr .98fr;grid-template-rows:auto 1fr;gap:0 clamp(28px,4vw,58px)}
+
+h2{grid-column:1/-1;font-family:var(--d);font-weight:700;letter-spacing:-.03em;line-height:1.04;
+  font-size:clamp(30px,4.4vw,50px)}
+.sub{grid-column:1/-1;color:var(--txt-dim);font-size:clamp(13px,1.5vw,17px);margin-top:8px;
+  margin-bottom:clamp(18px,3vh,34px)}
+
+/* painel dominante: a imagem se aproxima conforme a rolagem anda */
+.dom{position:relative;overflow:hidden;border-radius:14px;display:flex;align-items:flex-end;
+  padding:clamp(18px,2.4vw,30px)}
+.dom .im{position:absolute;inset:-6%;background-size:cover;background-position:center;opacity:.7;
+  will-change:transform}
+.dom:after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,2,20,.06) 32%,rgba(0,2,20,.96) 100%)}
+.dom .tx{position:relative;z-index:2}
+.dom .n{font-family:var(--d);font-weight:700;font-size:11px;letter-spacing:.2em;color:var(--roxo-luz)}
+.dom .t{font-family:var(--d);font-weight:700;font-size:clamp(19px,2.6vw,30px);line-height:1.1;
+  margin-top:9px;letter-spacing:-.02em;max-width:15ch}
+.dom .d{font-size:clamp(12.5px,1.35vw,15.5px);line-height:1.5;color:var(--txt-mid);margin-top:10px;max-width:32ch}
+
+/* lista: cada item acende quando a rolagem chega nele */
+.lista{display:flex;flex-direction:column;justify-content:center}
+.it{display:flex;align-items:baseline;gap:clamp(12px,1.4vw,20px);
+  padding:clamp(12px,2vh,21px) 0;position:relative;opacity:.24;will-change:opacity,transform}
+.it:before{content:"";position:absolute;left:0;top:0;height:1px;width:0%;background:var(--linha)}
+.it .n{font-family:var(--d);font-weight:700;font-size:11px;letter-spacing:.2em;color:var(--teal-luz);min-width:24px}
+.it .t{font-family:var(--d);font-weight:600;font-size:clamp(14px,1.7vw,19px);letter-spacing:-.015em;line-height:1.25}
+.it.viva{opacity:1}
+
+.fim{height:60vh;display:grid;place-items:center;color:var(--txt-dim);font-size:14px}
+@media (prefers-reduced-motion:reduce){ .it{opacity:1} }
+</style>
+</head>
+<body>
+
+<div class="rail">
+  <div class="m">Central<i>IT</i></div>
+  <div class="p"><b id="prog"></b></div>
+</div>
+
+<section class="secao" id="secao">
+  <div class="preso">
+    <div class="dentro">
+      <h2>Frentes de atuação</h2>
+      <p class="sub">Seis frentes, a plataforma CITSmart por baixo de todas.</p>
+
+      <article class="dom">
+        <div class="im" id="im" style="background-image:url('../assets-figma/78c114da.png')"></div>
+        <div class="tx">
+          <div class="n">01</div>
+          <div class="t">Transformação digital impulsionada por IA</div>
+          <div class="d">Ampliamos eficiência e criamos diferenciais de valor em ciclos de 30 dias.</div>
+        </div>
+      </article>
+
+      <div class="lista" id="lista">
+        <article class="it"><span class="n">02</span><span class="t">Estratégia e transformação de negócios</span></article>
+        <article class="it"><span class="n">03</span><span class="t">Eficientização de operações</span></article>
+        <article class="it"><span class="n">04</span><span class="t">Operações inteligentes de TI</span></article>
+        <article class="it"><span class="n">05</span><span class="t">Comunicação omnichannel inteligente</span></article>
+        <article class="it"><span class="n">06</span><span class="t">Soluções inovadoras</span></article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="fim">continua</div>
+
+<script type="module">
+import { scroll, animate } from "./vendor/motion.js";
+const reduz = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const secao = document.getElementById('secao');
+const itens = [...document.querySelectorAll('.it')];
+const im = document.getElementById('im');
+const prog = document.getElementById('prog');
+
+if (reduz) {
+  itens.forEach(i => i.classList.add('viva'));
+} else {
+  /* A imagem se aproxima ao longo da secao inteira. Ligada a rolagem, entao
+     voltar o dedo desfaz o movimento: e o que diferencia de animacao disparada. */
+  scroll(animate(im, { scale: [1, 1.16], y: ['-2%', '2%'] }, { ease: 'linear' }),
+    { target: secao, offset: ['start start', 'end end'] });
+
+  /* Cada item da lista tem a sua fatia da rolagem. O filete risca da esquerda
+     para a direita e o item acende junto. */
+  itens.forEach((it, k) => {
+    const a = 0.16 + k * 0.15, b = a + 0.13;
+    scroll(animate(it, { opacity: [.24, 1], x: [26, 0] }, { ease: 'linear' }),
+      { target: secao, offset: [`${a} start`, `${b} start`] });
+    scroll(animate(it, { '--w': ['0%', '100%'] }, { ease: 'linear' }),
+      { target: secao, offset: [`${a} start`, `${b} start`] });
+  });
+
+  scroll(animate(prog, { height: ['0%', '100%'] }, { ease: 'linear' }),
+    { target: secao, offset: ['start start', 'end end'] });
+}
+
+/* o filete usa a variavel animada acima */
+const st = document.createElement('style');
+st.textContent = '.it:before{width:var(--w,0%);transition:none}';
+document.head.appendChild(st);
+</script>
+</body>
+</html>
