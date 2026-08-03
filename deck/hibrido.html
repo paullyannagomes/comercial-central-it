@@ -243,6 +243,67 @@ h2{font-family:var(--d);font-weight:700;letter-spacing:-.03em;line-height:1.05;f
 body.na-inicio .rail, body.na-inicio .dica{opacity:0;pointer-events:none}
 .rail, .dica{transition:opacity .45s var(--e)}
 
+/* ── Portfolio: o menu que o Iniciar abre ─────────────────────────────
+   Tela de moldura, nao de rolagem: um quadro arredondado sobre o brilho
+   roxo, com trilho proprio de icones a esquerda. Por isso ela tambem e
+   .solo, e o trilho de pontos do deck some enquanto ela esta na tela. */
+.sec.portfolio{margin-left:0;padding:clamp(9px,.85vw,20px);
+  background:#05030c radial-gradient(86% 52% at 50% 108%, #34105c 0%, #200a3c 30%, #10061f 58%, #07040f 82%, #05030c 100%)}
+#ap .quadro{position:relative;height:calc(100vh - clamp(18px,1.7vw,40px));overflow:hidden;
+  border-radius:clamp(16px,1.5vw,30px);background:#0a0a1e;
+  border:1px solid rgba(255,255,255,.055);display:flex}
+/* A arte sangra pela direita e se dissolve antes do texto, senao a leitura
+   disputa com as fibras. */
+#ap .arte{position:absolute;inset:0 0 0 30%;background:url('../assets-figma/ae766927.png') right center/cover no-repeat;
+  filter:brightness(.6) saturate(.92);
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.28) 22%,rgba(0,0,0,.8) 52%,#000 74%);
+  mask-image:linear-gradient(90deg,transparent 0%,rgba(0,0,0,.28) 22%,rgba(0,0,0,.8) 52%,#000 74%)}
+
+#ap .menu{position:relative;z-index:2;flex:none;width:clamp(62px,8.2vw,128px);
+  border-right:1px solid rgba(255,255,255,.08);display:flex;flex-direction:column;
+  align-items:center;padding:clamp(18px,2.4vh,34px) 0 clamp(22px,3vh,44px)}
+/* No protótipo o topo do trilho traz só o logotipo, e o símbolo aparece
+   como primeiro ícone da lista. Texto aqui em vez de imagem: nesta escala
+   o PNG ficaria borrado, e a marca é a mesma do trilho do deck. */
+#ap .menu .m{font-family:var(--d);font-weight:700;font-size:clamp(11px,1.05vw,15px);
+  color:var(--teal-luz);margin-bottom:clamp(26px,6vh,72px)}
+#ap .menu .m i{color:#fff;font-style:normal}
+/* O símbolo sai da própria logo: mostro só a parte esquerda do arquivo.
+   Os 57% saem da conta, não do olho: o símbolo ocupa 400 dos 922 px do
+   arquivo, então a arte precisa medir 2,3x a caixa para que a fatia
+   visível termine exatamente onde o logotipo começa. */
+#ap .simb{background:url('../marca/central-it.png') left center/auto 57.2% no-repeat;opacity:.6}
+#ap .itens{display:flex;flex-direction:column;align-items:center;gap:clamp(12px,2.2vh,26px)}
+#ap .ic{width:clamp(38px,3.5vw,56px);height:clamp(38px,3.5vw,56px);display:grid;place-items:center;
+  border-radius:clamp(10px,1vw,16px);color:#fff;opacity:.42}
+#ap .ic svg{width:62%;height:62%;display:block}
+/* Só o item da tela atual acende. Os outros ficam apagados de proposito:
+   as telas que eles abririam ainda nao existem, e botao que nao leva a
+   lugar nenhum e pior do que botao visivelmente inativo. */
+#ap .ic.on{opacity:1;background:linear-gradient(160deg,#8b46c9,#6a24a8);
+  box-shadow:0 0 0 1px rgba(197,146,246,.5), 0 0 26px 6px rgba(139,70,201,.55)}
+#ap .sair{margin-top:auto;opacity:.42;cursor:pointer}
+#ap .sair:active{opacity:.8}
+
+#ap .corpo{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;
+  justify-content:center;padding:clamp(24px,3.4vw,68px) clamp(24px,3.4vw,68px)
+  clamp(24px,3.4vw,68px) clamp(28px,4.6vw,92px);max-width:64%}
+#ap .cab{display:flex;align-items:center;gap:clamp(14px,1.8vw,34px)}
+#ap .emblema{flex:none;width:clamp(66px,8.4vw,168px);height:auto;color:#fff}
+#ap .emblema svg{width:100%;height:auto;display:block}
+#ap .rotulo{font-family:var(--d);font-weight:800;letter-spacing:-.03em;line-height:1;
+  font-size:clamp(30px,4.9vw,100px);color:var(--roxo-luz)}
+#ap .titulo{font-family:var(--d);font-weight:700;letter-spacing:-.025em;line-height:1.12;
+  font-size:clamp(19px,2.6vw,53px);margin-top:clamp(22px,4.4vh,58px);max-width:17ch}
+#ap .apoio{font-size:clamp(12px,1.15vw,23px);line-height:1.55;color:var(--txt-mid);
+  margin-top:clamp(14px,2.4vh,30px);max-width:52ch}
+#ap .entrar{display:inline-flex;align-items:center;justify-content:center;align-self:flex-start;
+  min-width:max(104px,8.2vw);padding:clamp(11px,1.35vh,16px) clamp(18px,1.8vw,28px);
+  margin-top:clamp(22px,4.6vh,58px);border-radius:99px;background:#fff;color:#7a2fbe;
+  text-decoration:none;font-family:var(--d);font-weight:600;font-size:clamp(13px,1.05vw,17px);
+  transition:transform .2s var(--e)}
+#ap .entrar:active{transform:scale(.97)}
+
 /* cursor:pointer nao e enfeite: sem ele o Safari do iOS nao dispara click
    em div. E o z acima do trilho, senao a metade esquerda fica bloqueada. */
 .tap{position:fixed;top:0;bottom:0;width:16%;z-index:45;cursor:pointer}
@@ -260,9 +321,82 @@ body.na-inicio .rail, body.na-inicio .dica{opacity:0;pointer-events:none}
 </div>
 
 <!-- 0 ─ tela inicial -->
-<section class="sec inicio" id="a0">
+<section class="sec solo inicio" id="a0">
   <img class="marca" src="../marca/central-it.png" width="922" height="229" alt="Central IT">
-  <a class="iniciar" href="#a1">Iniciar</a>
+  <a class="iniciar" href="#ap">Iniciar</a>
+</section>
+
+<!-- Icones em SVG, definidos uma vez e reusados por <use>: vetor nao pixela
+     no iPad, e o empacotador nao precisa embutir imagem nenhuma. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-portfolio" viewBox="0 0 120 120">
+    <g stroke="currentColor" stroke-width="3.4" stroke-linecap="round">
+      <path d="M60 30V16M60 90v14M30 60H16M90 60h14M42.5 42.5 32.6 32.6M77.5 77.5l9.9 9.9M77.5 42.5l9.9-9.9M42.5 77.5l-9.9 9.9"/>
+    </g>
+    <g fill="#0a0a1e" stroke="currentColor" stroke-width="3.4">
+      <circle cx="60" cy="10" r="6"/><circle cx="60" cy="110" r="6"/>
+      <circle cx="10" cy="60" r="6"/><circle cx="110" cy="60" r="6"/>
+      <circle cx="27" cy="27" r="6"/><circle cx="93" cy="93" r="6"/>
+      <circle cx="93" cy="27" r="6"/><circle cx="27" cy="93" r="6"/>
+    </g>
+    <circle cx="60" cy="60" r="31" fill="currentColor"/>
+    <!-- A peça é retângulo mais dois círculos sobrepostos, de propósito.
+         Com arco, o lado do encaixe depende do sweep-flag num semicírculo
+         exato, e sai para dentro quando se erra o sinal: assim o desenho
+         não depende de acertar a convenção. -->
+    <g fill="#0a0a1e">
+      <rect x="44" y="44" width="33" height="33"/>
+      <circle cx="60.5" cy="44" r="7"/>
+      <circle cx="77" cy="60.5" r="7"/>
+    </g>
+    <path d="M50 61l7 7 14-18" fill="none" stroke="currentColor"
+      stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="i-trofeu" viewBox="0 0 120 120">
+    <g fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M36 20h48v26a24 24 0 0 1-48 0z"/>
+      <path d="M36 26H22v8a16 16 0 0 0 14 15.9M84 26h14v8a16 16 0 0 1-14 15.9"/>
+      <path d="M60 70v18M42 100h36M48 100c0-7 5-12 12-12s12 5 12 12"/>
+    </g>
+  </symbol>
+  <symbol id="i-medidor" viewBox="0 0 120 120">
+    <g fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round">
+      <circle cx="60" cy="60" r="42"/>
+      <path d="M74 46 55 65"/><circle cx="60" cy="60" r="5" fill="currentColor"/>
+    </g>
+  </symbol>
+  <symbol id="i-sair" viewBox="0 0 120 120">
+    <g fill="none" stroke="currentColor" stroke-width="6.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M70 26H30a6 6 0 0 0-6 6v56a6 6 0 0 0 6 6h40"/>
+      <path d="M78 42l18 18-18 18M96 60H50"/>
+    </g>
+  </symbol>
+</svg>
+
+<!-- 0.5 ─ portfolio, o menu que o Iniciar abre -->
+<section class="sec solo portfolio" id="ap">
+  <div class="quadro">
+    <div class="arte"></div>
+    <nav class="menu">
+      <div class="m">Central<i>IT</i></div>
+      <div class="itens">
+        <span class="ic simb" aria-hidden="true"></span>
+        <span class="ic on" aria-current="page" title="Portfólio"><svg><use href="#i-portfolio"/></svg></span>
+        <span class="ic" title="Em breve"><svg><use href="#i-trofeu"/></svg></span>
+        <span class="ic" title="Em breve"><svg><use href="#i-medidor"/></svg></span>
+      </div>
+      <a class="ic sair" href="#a0" title="Voltar à abertura"><svg><use href="#i-sair"/></svg></a>
+    </nav>
+    <div class="corpo">
+      <div class="cab">
+        <span class="emblema"><svg viewBox="0 0 120 120"><use href="#i-portfolio"/></svg></span>
+        <div class="rotulo"></div>
+      </div>
+      <div class="titulo"></div>
+      <p class="apoio"></p>
+      <a class="entrar" href="#a1">Entrar</a>
+    </div>
+  </div>
 </section>
 
 <!-- 1 ─ capa, fixa -->
@@ -382,6 +516,10 @@ import { hyperAgents as H } from "../conteudo/hyper-agents.js";
    data-c e o unico contrato entre os dois, entao o marketing edita o
    conteudo sem nunca abrir este arquivo. */
 const põe = (sel, txt) => { const e = document.querySelector(sel); if (e && txt != null) e.textContent = txt; };
+põe('#ap .rotulo', C.portfolio.rotulo);
+põe('#ap .titulo', C.portfolio.titulo);
+põe('#ap .apoio', C.portfolio.apoio);
+põe('#ap .entrar', C.portfolio.botao);
 põe('#a1 h1', C.capa.titulo);
 põe('#a1 .lead', C.capa.apoio);
 põe('#a2 h2', C.frentes.titulo);
@@ -521,13 +659,18 @@ const dica = document.getElementById('dica');
 /* O ponto do trilho segue a secao visivel, e tocar nele leva ate la. */
 bolas.forEach((b, k) => b.addEventListener('pointerup', () =>
   secs[k].scrollIntoView({ behavior: 'smooth', block: 'start' })));
-const inicio = document.getElementById('a0');
+/* Abertura e portfolio trazem trilho proprio, entao o de pontos some
+   enquanto uma delas ocupa a tela. */
+const solos = [...document.querySelectorAll('.sec.solo')];
 const marca = () => {
   const meio = scrollY + innerHeight * .42;
   let atual = 0;
   secs.forEach((s, k) => { if (s.offsetTop <= meio) atual = k; });
   bolas.forEach((b, k) => b.classList.toggle('on', k === atual));
-  if (inicio) document.body.classList.toggle('na-inicio', scrollY < inicio.offsetHeight * .5);
+  document.body.classList.toggle('na-inicio', solos.some(s => {
+    const r = s.getBoundingClientRect();
+    return r.top < innerHeight * .5 && r.bottom > innerHeight * .5;
+  }));
 };
 addEventListener('scroll', marca, { passive: true });
 marca();

@@ -10,6 +10,17 @@
  * para a conferência apontar quando ela mudar lá e ninguém trouxe aqui.
  */
 export const institucional = {
+  /* Tela de menu, entre a abertura e a apresentação. O texto é o do hero do
+     site, que aqui cabe inteiro porque ninguém lê esta tela em voz alta:
+     ela fica no ar enquanto o vendedor se apresenta. */
+  portfolio: {
+    rotulo: "Portfólio",
+    titulo: "Somos uma empresa de inteligência em gestão, tecnologia e negócios",
+    apoio: "Elevamos a performance da sua organização conectando pessoas, processos e tecnologias às estratégias do seu negócio.",
+    botao: "Entrar",
+    espelho: "Somos uma empresa de inteligência em gestão, tecnologia e negócios.",
+  },
+
   capa: {
     titulo: "Mais inteligência, da estratégia à operação",
     apoio: "Conectamos pessoas, processos e tecnologia para que o essencial siga funcionando.",
