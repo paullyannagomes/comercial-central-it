@@ -44,7 +44,15 @@ body{background:var(--fundo);color:#fff;font-family:var(--b);
 .sec{position:relative;min-height:100vh;margin-left:clamp(60px,5.5vw,92px);overflow:hidden}
 .sec.longa{overflow:visible;min-height:0}
 
-.pad{padding:clamp(26px,4.4vh,58px) clamp(26px,4.4vw,72px)}
+/* position + z-index nao sao enfeite: .bg e .veu sao absolutos, e elemento
+   posicionado pinta acima de elemento estatico mesmo vindo antes no HTML.
+   Sem isto o veu da capa cobre o titulo, e a peca abre sem texto. */
+.pad{padding:clamp(26px,4.4vh,58px) clamp(26px,4.4vw,72px);position:relative;z-index:2}
+/* A secao tem min-height, nao height. Por isso o height:100% que estava aqui
+   nao resolvia contra nada, e o justify-content:center das secoes nao tinha
+   efeito: tudo ficava empilhado no topo com meia tela vazia embaixo.
+   min-height em vh centraliza de verdade e ainda cresce se o texto passar. */
+.sec:not(.longa)>.pad{min-height:100vh}
 h1{font-family:var(--d);font-weight:800;letter-spacing:-.035em;line-height:1.02;font-size:clamp(34px,6.4vw,76px)}
 h2{font-family:var(--d);font-weight:700;letter-spacing:-.03em;line-height:1.05;font-size:clamp(28px,4.2vw,48px)}
 .eyebrow{font-family:var(--d);font-weight:700;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--teal-luz)}
@@ -57,7 +65,11 @@ h2{font-family:var(--d);font-weight:700;letter-spacing:-.03em;line-height:1.05;f
 .veu{position:absolute;inset:0}
 
 /* 1 capa */
-#a1 .pad{height:100%;display:flex;flex-direction:column;justify-content:center;max-width:60%}
+/* A logo fica fora do .pad porque o .pad centraliza o bloco de texto na
+   vertical: dentro dele, a marca desceria junto com o titulo. */
+#a1 .logo{position:absolute;z-index:3;left:clamp(26px,4.4vw,72px);top:clamp(26px,4.4vh,58px);
+  width:clamp(148px,16vw,224px);height:auto}
+#a1 .pad{display:flex;flex-direction:column;justify-content:center;max-width:60%}
 #a1 .risco{width:62px;height:5px;background:var(--teal-luz);border-radius:99px;margin-bottom:32px;
   box-shadow:0 0 18px rgba(63,217,226,.6)}
 #a1 .lead{margin-top:24px;max-width:30ch}
@@ -89,7 +101,7 @@ h2{font-family:var(--d);font-weight:700;letter-spacing:-.03em;line-height:1.05;f
 #a2 .it .t{font-family:var(--d);font-weight:600;font-size:clamp(14px,1.65vw,19px);letter-spacing:-.015em;line-height:1.25}
 
 /* 3 numero que conta */
-#a3 .pad{height:100%;display:grid;grid-template-columns:1fr .9fr;align-items:center;gap:clamp(24px,4vw,60px)}
+#a3 .pad{display:grid;grid-template-columns:1fr .9fr;align-items:center;gap:clamp(24px,4vw,60px)}
 #a3 .cifra{font-family:var(--d);font-weight:800;font-size:clamp(90px,15vw,190px);line-height:.84;letter-spacing:-.05em}
 #a3 .cifra span{color:var(--teal-luz)}
 #a3 .nota{font-size:clamp(14px,1.7vw,19px);line-height:1.6;color:var(--txt-mid);margin-top:20px;max-width:28ch}
@@ -99,12 +111,12 @@ h2{font-family:var(--d);font-weight:700;letter-spacing:-.03em;line-height:1.05;f
 #a3 .li p{font-size:clamp(12.5px,1.4vw,15.5px);line-height:1.45;color:var(--txt-mid)}
 
 /* 4 diagrama que se desenha */
-#a4 .pad{height:100%;display:flex;flex-direction:column;justify-content:center}
+#a4 .pad{display:flex;flex-direction:column;justify-content:center}
 #a4 svg{width:min(94%,980px);height:auto;margin-top:clamp(18px,4vh,42px)}
 #a4 .no{font-family:var(--d);font-weight:600;font-size:13px}
 
 /* 5 telas reais, construcao sob comando */
-#a5 .pad{height:100%;display:flex;flex-direction:column}
+#a5 .pad{display:flex;flex-direction:column}
 #a5 .sub{color:var(--txt-dim);font-size:clamp(13px,1.5vw,17px);margin-top:8px}
 #a5 .telas{flex:1;display:grid;grid-template-columns:1.32fr 1fr;gap:clamp(16px,2vw,26px);margin-top:clamp(16px,3vh,30px)}
 #a5 .tela{position:relative;border-radius:12px;overflow:hidden;border:1px solid rgba(63,217,226,.16);
@@ -116,7 +128,7 @@ h2{font-family:var(--d);font-weight:700;letter-spacing:-.03em;line-height:1.05;f
    panorama e claro para aprofundamento, e o contraste tambem serve de
    descanso visual numa apresentacao longa. ── */
 .sec.claro{background:#fff;color:#0d1d3d}
-.sec.claro .pad{height:100%;display:grid;grid-template-columns:1.02fr .98fr;
+.sec.claro .pad{display:grid;grid-template-columns:1.02fr .98fr;
   align-items:center;gap:clamp(20px,3vw,48px)}
 .sec.claro .arte{position:absolute;right:0;top:0;bottom:0;width:52%;
   background-size:cover;background-position:center;opacity:.5}
@@ -143,7 +155,7 @@ h2{font-family:var(--d);font-weight:700;letter-spacing:-.03em;line-height:1.05;f
 /* ── Produto, tres telas executivas. Escuro com acento lima, tipografia
    grande e uma ideia por tela: executivo nao le, ele escuta e olha. ── */
 .sec.prod{background:radial-gradient(120% 90% at 88% 8%,rgba(77,28,117,.34),transparent 62%),var(--fundo)}
-.sec.prod .pad{height:100%;display:flex;flex-direction:column;justify-content:center;
+.sec.prod .pad{display:flex;flex-direction:column;justify-content:center;
   padding:clamp(30px,6vh,68px) clamp(28px,5vw,76px)}
 .sec.prod .marca{font-family:var(--d);font-weight:700;font-size:clamp(11px,1.25vw,14px);
   letter-spacing:.16em;text-transform:uppercase;color:var(--txt-dim)}
@@ -201,7 +213,7 @@ h2{font-family:var(--d);font-weight:700;letter-spacing:-.03em;line-height:1.05;f
 .sec.prod .serv i{width:5px;height:5px;border-radius:50%;background:#c4f542;flex:none;margin-top:6px}
 
 /* 6 fecho */
-#a6 .pad{height:100%;display:flex;flex-direction:column;justify-content:center}
+#a6 .pad{display:flex;flex-direction:column;justify-content:center}
 #a6 .site{margin-top:clamp(22px,4vh,40px);font-family:var(--d);font-weight:600;
   font-size:clamp(15px,1.8vw,19px);color:var(--teal-luz)}
 
@@ -225,6 +237,7 @@ h2{font-family:var(--d);font-weight:700;letter-spacing:-.03em;line-height:1.05;f
 <section class="sec fixa on" id="a1">
   <div class="bg" style="background-image:url('../gerado-capa-01.png')"></div>
   <div class="veu" style="background:linear-gradient(90deg,var(--fundo) 20%,rgba(0,2,20,.7) 46%,transparent 86%)"></div>
+  <img class="logo" src="../marca/central-it.png" width="922" height="229" alt="Central IT">
   <div class="pad">
     <div class="risco r"></div>
     <h1 class="r">Inteligência em gestão, tecnologia e negócios</h1>

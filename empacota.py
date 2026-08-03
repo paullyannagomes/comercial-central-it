@@ -22,6 +22,8 @@ NAV = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKi
 # Largura maxima util: o palco nunca passa disso, entao guardar mais e peso morto.
 LARGURA_MAX = 1700
 QUALIDADE = 82
+# o mesmo --fundo do deck: e sobre ele que a peca achata quem tem alpha inutil
+FUNDO = (0, 2, 20, 255)
 
 
 def junta_script(html: str) -> str:
@@ -58,7 +60,12 @@ def embute_fontes(html: str) -> str:
         dados = urllib.request.urlopen(urllib.request.Request(u.group(1), headers=NAV), timeout=60).read()
         total += len(dados)
         b64 = base64.b64encode(dados).decode()
-        blocos.append(bloco.replace(u.group(0), f"url(data:font/woff2;base64,{b64}) format('woff2')"))
+        # troca so a URL. O format('woff2') ja vem no CSS do Google, e
+        # reescreve-lo aqui gerava "format('woff2') format('woff2')": src
+        # invalido, face descartada em silencio, peca inteira em fonte de
+        # sistema. O empacotador ainda dizia "7 faces" e o arquivo tinha as
+        # sete, entao so olhando a tipografia renderizada isso aparece.
+        blocos.append(bloco.replace(u.group(0), f"url(data:font/woff2;base64,{b64})"))
     print(f"  fontes: {len(blocos)} faces, {total // 1024} KB")
     return html.replace(link.group(0), "<style>\n" + "\n".join(blocos) + "\n</style>")
 
@@ -78,14 +85,39 @@ def embute_imagens(html: str) -> str:
             print(f"  AUSENTE: {caminho}")
             continue
         total_antes += arq.stat().st_size
-        im = Image.open(arq).convert("RGB")
+        im = Image.open(arq)
+        # A logo tem fundo transparente, e JPEG nao guarda alpha: convertida,
+        # ela sairia com um retangulo chapado por tras. Entao ela vai em PNG.
+        #
+        # Ter canal alpha nao basta como criterio. As artes de fundo tambem tem
+        # o canal, com 1% a 3% de pixels quase opacos que ninguem enxerga, e
+        # manda-las para PNG por causa disso triplicou a peca: 1,8 MB viraram
+        # 5,6 MB, e ela precisa caber num AirDrop. Quem tem recorte de verdade
+        # passa de longe do limite; quem tem so ruido e achatado no fundo da
+        # peca, que e escuro e portanto nao deixa halo.
+        alpha = False
+        if im.mode in ("RGBA", "LA") or (im.mode == "P" and "transparency" in im.info):
+            im = im.convert("RGBA")
+            canal = im.getchannel("A")
+            translucidos = sum(canal.histogram()[:250])
+            alpha = translucidos > .1 * im.width * im.height
+            if not alpha:
+                chapa = Image.new("RGBA", im.size, FUNDO)
+                chapa.alpha_composite(im)
+                im = chapa
+        im = im.convert("RGBA" if alpha else "RGB")
         if im.width > LARGURA_MAX:
             im = im.resize((LARGURA_MAX, round(im.height * LARGURA_MAX / im.width)), Image.LANCZOS)
         buf = io.BytesIO()
-        im.save(buf, "JPEG", quality=QUALIDADE, optimize=True, progressive=True)
+        if alpha:
+            im.save(buf, "PNG", optimize=True)
+            mime = "image/png"
+        else:
+            im.save(buf, "JPEG", quality=QUALIDADE, optimize=True, progressive=True)
+            mime = "image/jpeg"
         total_depois += buf.tell()
         b64 = base64.b64encode(buf.getvalue()).decode()
-        html = html.replace(caminho, f"data:image/jpeg;base64,{b64}")
+        html = html.replace(caminho, f"data:{mime};base64,{b64}")
         print(f"  {caminho.split('/')[-1]:22} {arq.stat().st_size // 1024:5} KB -> {buf.tell() // 1024:5} KB")
     print(f"  imagens: {total_antes // 1024} KB -> {total_depois // 1024} KB")
     return html
